@@ -23,6 +23,7 @@ import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
+import { Route as AuthenticatedDashboardAiDraftRouteImport } from './routes/_authenticated/dashboard.ai-draft'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
 import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
 
@@ -98,6 +99,12 @@ const AuthenticatedDashboardArticlesRoute =
     path: '/articles',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAiDraftRoute =
+  AuthenticatedDashboardAiDraftRouteImport.update({
+    id: '/ai-draft',
+    path: '/ai-draft',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardArticlesNewRoute =
   AuthenticatedDashboardArticlesNewRouteImport.update({
     id: '/new',
@@ -124,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
+  '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -141,6 +149,7 @@ export interface FileRoutesByTo {
   '/tools': typeof ToolsRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides': typeof GuidesIndexRoute
+  '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -160,6 +169,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
+  '/_authenticated/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/guides/$slug'
     | '/guides/'
+    | '/dashboard/ai-draft'
     | '/dashboard/articles'
     | '/dashboard/'
     | '/dashboard/articles/new'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/tools'
     | '/guides/$slug'
     | '/guides'
+    | '/dashboard/ai-draft'
     | '/dashboard/articles'
     | '/dashboard'
     | '/dashboard/articles/new'
@@ -215,6 +227,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/guides/$slug'
     | '/guides/'
+    | '/_authenticated/dashboard/ai-draft'
     | '/_authenticated/dashboard/articles'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/articles/new'
@@ -336,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardArticlesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/ai-draft': {
+      id: '/_authenticated/dashboard/ai-draft'
+      path: '/ai-draft'
+      fullPath: '/dashboard/ai-draft'
+      preLoaderRoute: typeof AuthenticatedDashboardAiDraftRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/articles/new': {
       id: '/_authenticated/dashboard/articles/new'
       path: '/new'
@@ -372,12 +392,14 @@ const AuthenticatedDashboardArticlesRouteWithChildren =
   )
 
 interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardAiDraftRoute: typeof AuthenticatedDashboardAiDraftRoute
   AuthenticatedDashboardArticlesRoute: typeof AuthenticatedDashboardArticlesRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
+    AuthenticatedDashboardAiDraftRoute: AuthenticatedDashboardAiDraftRoute,
     AuthenticatedDashboardArticlesRoute:
       AuthenticatedDashboardArticlesRouteWithChildren,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
