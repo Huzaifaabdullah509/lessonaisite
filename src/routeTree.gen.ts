@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PromptsRouteImport } from './routes/prompts'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as EditorialStandardsRouteImport } from './routes/editorial-standards'
@@ -41,6 +42,11 @@ const TermsRoute = TermsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PromptsRoute = PromptsRouteImport.update({
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/editorial-standards': typeof EditorialStandardsRoute
   '/privacy': typeof PrivacyRoute
   '/prompts': typeof PromptsRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/tools': typeof ToolsRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/editorial-standards': typeof EditorialStandardsRoute
   '/privacy': typeof PrivacyRoute
   '/prompts': typeof PromptsRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/tools': typeof ToolsRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/editorial-standards': typeof EditorialStandardsRoute
   '/privacy': typeof PrivacyRoute
   '/prompts': typeof PromptsRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/tools': typeof ToolsRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/editorial-standards'
     | '/privacy'
     | '/prompts'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
     | '/tools'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/editorial-standards'
     | '/privacy'
     | '/prompts'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
     | '/tools'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/editorial-standards'
     | '/privacy'
     | '/prompts'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
     | '/tools'
@@ -254,6 +266,7 @@ export interface RootRouteChildren {
   EditorialStandardsRoute: typeof EditorialStandardsRoute
   PrivacyRoute: typeof PrivacyRoute
   PromptsRoute: typeof PromptsRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   ToolsRoute: typeof ToolsRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prompts': {
@@ -438,6 +458,7 @@ const rootRouteChildren: RootRouteChildren = {
   EditorialStandardsRoute: EditorialStandardsRoute,
   PrivacyRoute: PrivacyRoute,
   PromptsRoute: PromptsRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   ToolsRoute: ToolsRoute,
