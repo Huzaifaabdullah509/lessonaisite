@@ -24,6 +24,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
+import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
 
 const ToolsRoute = ToolsRouteImport.update({
   id: '/tools',
@@ -103,6 +104,12 @@ const AuthenticatedDashboardArticlesNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedDashboardArticlesRoute,
   } as any)
+const AuthenticatedDashboardArticlesIdEditRoute =
+  AuthenticatedDashboardArticlesIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => AuthenticatedDashboardArticlesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -136,6 +144,7 @@ export interface FileRoutesByTo {
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -154,6 +163,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles'
     | '/dashboard/'
     | '/dashboard/articles/new'
+    | '/dashboard/articles/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles'
     | '/dashboard'
     | '/dashboard/articles/new'
+    | '/dashboard/articles/$id/edit'
   id:
     | '__root__'
     | '/'
@@ -206,6 +218,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/articles'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/articles/new'
+    | '/_authenticated/dashboard/articles/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -330,17 +343,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
       parentRoute: typeof AuthenticatedDashboardArticlesRoute
     }
+    '/_authenticated/dashboard/articles/$id/edit': {
+      id: '/_authenticated/dashboard/articles/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/dashboard/articles/$id/edit'
+      preLoaderRoute: typeof AuthenticatedDashboardArticlesIdEditRouteImport
+      parentRoute: typeof AuthenticatedDashboardArticlesRoute
+    }
   }
 }
 
 interface AuthenticatedDashboardArticlesRouteChildren {
   AuthenticatedDashboardArticlesNewRoute: typeof AuthenticatedDashboardArticlesNewRoute
+  AuthenticatedDashboardArticlesIdEditRoute: typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 
 const AuthenticatedDashboardArticlesRouteChildren: AuthenticatedDashboardArticlesRouteChildren =
   {
     AuthenticatedDashboardArticlesNewRoute:
       AuthenticatedDashboardArticlesNewRoute,
+    AuthenticatedDashboardArticlesIdEditRoute:
+      AuthenticatedDashboardArticlesIdEditRoute,
   }
 
 const AuthenticatedDashboardArticlesRouteWithChildren =
