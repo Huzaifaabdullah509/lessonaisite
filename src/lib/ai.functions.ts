@@ -1,21 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { generateText, Output, NoObjectGeneratedError } from "ai";
-import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-
-function gateway() {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("LOVABLE_API_KEY is not configured");
-  return createOpenAICompatible({
-    name: "lovable",
-    baseURL: "https://ai.gateway.lovable.dev/v1",
-    headers: {
-      "Lovable-API-Key": key,
-      "X-Lovable-AIG-SDK": "vercel-ai-sdk",
-    },
-  });
-}
 
 async function assertAdmin(context: { supabase: any; userId: string }) {
   const { data } = await context.supabase.rpc("has_role", {
@@ -23,6 +8,46 @@ async function assertAdmin(context: { supabase: any; userId: string }) {
     _role: "admin",
   });
   if (!data) throw new Error("Forbidden: admin role required");
+}
+
+const GEMINI_MODEL = "gemini-flash-latest";
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+
+async function callGemini(prompt: string): Promise<string> {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY is not configured");
+  const res = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-goog-api-key": key,
+    },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: "application/json" },
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Gemini request failed [${res.status}]: ${body}`);
+  }
+  const json = await res.json();
+  const text: string | undefined = json?.candidates?.[0]?.content?.parts
+    ?.map((p: any) => p?.text ?? "")
+    .join("");
+  if (!text) throw new Error("Gemini returned no text");
+  return text;
+}
+
+function parseJson<T>(raw: string, schema: z.ZodType<T>): T {
+  const cleaned = raw
+    .trim()
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/, "")
+    .replace(/```$/, "")
+    .trim();
+  const parsed = JSON.parse(cleaned);
+  return schema.parse(parsed);
 }
 
 const DraftInput = z.object({
@@ -48,7 +73,6 @@ export const generateArticleDraft = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => DraftInput.parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const model = gateway()("google/gemini-3-flash-preview");
     const prompt = `You are the editor of LeasonAI, a teacher-first AI publication.
 Write a NEW long-form guide (1000-1500 words) in Markdown for classroom teachers.
 
@@ -61,30 +85,28 @@ Rules:
 - Include: intro, 3-5 H2 sections, at least one Markdown table OR bulleted list, and a closing takeaway.
 - Include one "Watch-outs" or "Guardrails" section.
 - Never include disclaimers about being an AI.
-- The slug must be lowercase-with-dashes and derived from the title.
+- The slug must be lowercase-with-dashes derived from the title.
 - Pick category from: guides, prompts, tool-reviews, ethics, productivity.
 - Return 3-6 short lowercase tags.
 - reading_time_minutes should be an integer estimate (words / 200).
 
-Return JSON matching the schema.`;
-
+Return ONLY valid JSON matching this shape:
+{
+  "title": string,
+  "slug": string,
+  "excerpt": string,
+  "seo_title": string,
+  "seo_description": string,
+  "category": string,
+  "tags": string[],
+  "reading_time_minutes": number,
+  "body_md": string
+}`;
+    const raw = await callGemini(prompt);
     try {
-      const { output } = await generateText({
-        model,
-        prompt,
-        output: Output.object({ schema: DraftShape }),
-      });
-      return output;
-    } catch (error) {
-      if (NoObjectGeneratedError.isInstance(error)) {
-        try {
-          const parsed = JSON.parse(error.text ?? "{}");
-          return DraftShape.parse(parsed);
-        } catch {
-          throw new Error("AI could not produce a valid draft. Try a more specific topic.");
-        }
-      }
-      throw error;
+      return parseJson(raw, DraftShape);
+    } catch {
+      throw new Error("AI could not produce a valid draft. Try a more specific topic.");
     }
   });
 
@@ -104,10 +126,7 @@ export const generateSeo = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => SeoInput.parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const model = gateway()("google/gemini-3-flash-preview");
-    const { output } = await generateText({
-      model,
-      prompt: `Generate SEO metadata for a LeasonAI article.
+    const prompt = `Generate SEO metadata for a LeasonAI article.
 Title: ${data.title}
 Body:
 ${data.body_md.slice(0, 4000)}
@@ -118,8 +137,8 @@ Rules:
 - excerpt: 1-2 sentences, ~180 chars, in the author voice.
 - tags: 3-6 short lowercase tags.
 
-Return JSON matching the schema.`,
-      output: Output.object({ schema: SeoShape }),
-    });
-    return output;
+Return ONLY valid JSON:
+{ "seo_title": string, "seo_description": string, "excerpt": string, "tags": string[] }`;
+    const raw = await callGemini(prompt);
+    return parseJson(raw, SeoShape);
   });
