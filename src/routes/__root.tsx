@@ -73,25 +73,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "LeasonAI — Practical AI for teachers" },
+      { title: "LeasonAI — AI teaching guides, prompts, tools & ethics" },
       {
         name: "description",
         content:
-          "LeasonAI publishes teacher-first AI guides, prompt libraries, tool reviews, and ethics resources for the modern classroom.",
+          "Long-form AI guides, prompt libraries, tool reviews, and classroom ethics resources built for teachers.",
       },
       { name: "theme-color", content: "#1E3A5F" },
-      { property: "og:title", content: "LeasonAI — Practical AI for teachers" },
+      { property: "og:title", content: "LeasonAI — AI teaching guides, prompts, tools & ethics" },
       {
         property: "og:description",
         content:
-          "Long-form guides, prompt workflows, tool reviews and ethics resources for educators using AI in the classroom.",
+          "Long-form AI guides, prompt libraries, tool reviews, and classroom ethics resources built for teachers.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "LeasonAI — AI teaching guides, prompts, tools & ethics" },
+      { name: "twitter:description", content: "Long-form AI guides, prompt libraries, tool reviews, and classroom ethics resources built for teachers." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b78c12d3-d039-42b0-9434-d44a3a943fa3" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b78c12d3-d039-42b0-9434-d44a3a943fa3" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
