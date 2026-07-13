@@ -95,6 +95,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: "https://lessonaisite.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://lessonaisite.lovable.app/#org",
+              name: "LeasonAI",
+              url: "https://lessonaisite.lovable.app/",
+              logo: "https://lessonaisite.lovable.app/favicon.ico",
+              description:
+                "Teacher-first AI publication: long-form guides, prompts, tool reviews, and classroom ethics.",
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://lessonaisite.lovable.app/#site",
+              url: "https://lessonaisite.lovable.app/",
+              name: "LeasonAI",
+              publisher: { "@id": "https://lessonaisite.lovable.app/#org" },
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://lessonaisite.lovable.app/guides?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
+            },
+          ],
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
