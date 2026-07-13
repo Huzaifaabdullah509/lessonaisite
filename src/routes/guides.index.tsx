@@ -12,7 +12,7 @@ const query = queryOptions({
 export const Route = createFileRoute("/guides/")({
   head: () => ({
     meta: [
-      { title: "Guides — LeasonAI" },
+      { title: "AI Guides for Teachers — LeasonAI" },
       {
         name: "description",
         content:
@@ -20,7 +20,9 @@ export const Route = createFileRoute("/guides/")({
       },
       { property: "og:title", content: "AI Guides for Teachers — LeasonAI" },
       { property: "og:description", content: "Long-form guides on using AI in the classroom." },
+      { property: "og:url", content: "https://lessonaisite.lovable.app/guides" },
     ],
+    links: [{ rel: "canonical", href: "https://lessonaisite.lovable.app/guides" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(query),
   component: GuidesIndex,

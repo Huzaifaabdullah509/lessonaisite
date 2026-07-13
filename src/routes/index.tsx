@@ -23,6 +23,42 @@ export const Route = createFileRoute("/")({
         content:
           "Long-form AI guides, prompt libraries, tool reviews, and classroom ethics resources built for teachers.",
       },
+      { property: "og:url", content: "https://lessonaisite.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "How can teachers use AI in the classroom safely?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Start with low-risk workflows like lesson planning, differentiation, and rubric feedback. Never send student PII to public AI tools, keep humans in the loop for grading, and follow your school's data policy.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What is the best AI tool for teachers in 2026?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "There is no single best tool. Google Gemini and NotebookLM are strong for planning and source-grounded study guides, while Diffit and MagicSchool are purpose-built for classroom differentiation.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Are AI detectors reliable for catching cheating?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "No. Independent studies show high false-positive rates, especially for English-language learners. Use process-based writing checks (drafts, in-class writing, revision history) instead.",
+              },
+            },
+          ],
+        }),
+      },
     ],
   }),
   loader: async ({ context }) => {

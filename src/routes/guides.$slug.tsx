@@ -17,7 +17,7 @@ export const Route = createFileRoute("/guides/$slug")({
     if (!data) throw notFound();
     return data;
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     if (!loaderData) {
       return {
         meta: [
@@ -28,6 +28,7 @@ export const Route = createFileRoute("/guides/$slug")({
     }
     const title = loaderData.seo_title ?? `${loaderData.title} — LeasonAI`;
     const description = loaderData.seo_description ?? loaderData.excerpt ?? "";
+    const url = `https://lessonaisite.lovable.app/guides/${params.slug}`;
     return {
       meta: [
         { title },
@@ -35,9 +36,54 @@ export const Route = createFileRoute("/guides/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
         ...(loaderData.cover_url
-          ? [{ property: "og:image", content: loaderData.cover_url }]
+          ? [
+              { property: "og:image", content: loaderData.cover_url },
+              { name: "twitter:image", content: loaderData.cover_url },
+            ]
           : []),
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: loaderData.title,
+            description,
+            image: loaderData.cover_url ? [loaderData.cover_url] : undefined,
+            datePublished: loaderData.published_at,
+            dateModified: loaderData.updated_at ?? loaderData.published_at,
+            author: { "@type": "Organization", name: "LeasonAI" },
+            publisher: {
+              "@type": "Organization",
+              name: "LeasonAI",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://lessonaisite.lovable.app/favicon.ico",
+              },
+            },
+            mainEntityOfPage: url,
+            keywords: (loaderData.tags ?? []).join(", "),
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://lessonaisite.lovable.app/" },
+              { "@type": "ListItem", position: 2, name: "Guides", item: "https://lessonaisite.lovable.app/guides" },
+              { "@type": "ListItem", position: 3, name: loaderData.title, item: url },
+            ],
+          }),
+        },
       ],
     };
   },
