@@ -90,16 +90,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "LeasonAI — AI teaching guides, prompts, tools & ethics" },
       { name: "twitter:description", content: "Long-form AI guides, prompt libraries, tool reviews, and classroom ethics resources built for teachers." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b78c12d3-d039-42b0-9434-d44a3a943fa3" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b78c12d3-d039-42b0-9434-d44a3a943fa3" },
+      { property: "og:image", content: "https://lessonaisite.lovable.app/icon-512.png" },
+      { name: "twitter:image", content: "https://lessonaisite.lovable.app/icon-512.png" },
+      { name: "google-adsense-account", content: "ca-pub-4127109483281417" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
-      { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon.png" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icon-192.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "canonical", href: "https://lessonaisite.lovable.app/" },
     ],
     scripts: [
+      {
+        async: true,
+        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4127109483281417",
+        crossOrigin: "anonymous",
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -110,7 +118,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               "@id": "https://lessonaisite.lovable.app/#org",
               name: "LeasonAI",
               url: "https://lessonaisite.lovable.app/",
-              logo: "https://lessonaisite.lovable.app/favicon.ico",
+              logo: "https://lessonaisite.lovable.app/icon-512.png",
               description:
                 "Teacher-first AI publication: long-form guides, prompts, tool reviews, and classroom ethics.",
             },
