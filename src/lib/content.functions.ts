@@ -28,6 +28,7 @@ export const getPublicArticles = createServerFn({ method: "GET" })
         "id, slug, title, excerpt, category, tags, cover_url, reading_time_minutes, published_at",
       )
       .eq("status", "published")
+      .lte("published_at", new Date().toISOString())
       .order("published_at", { ascending: false })
       .limit(data.limit);
     if (data.category) q = q.eq("category", data.category);
@@ -45,6 +46,7 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
       .select("*")
       .eq("slug", data.slug)
       .eq("status", "published")
+      .lte("published_at", new Date().toISOString())
       .maybeSingle();
     if (error) throw new Error(error.message);
     return row;
