@@ -104,6 +104,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
+        async: true,
+        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4127109483281417",
+        crossOrigin: "anonymous",
+      },
+      {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
@@ -113,7 +118,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               "@id": "https://lessonaisite.lovable.app/#org",
               name: "LeasonAI",
               url: "https://lessonaisite.lovable.app/",
-              logo: "https://lessonaisite.lovable.app/favicon.ico",
+              logo: "https://lessonaisite.lovable.app/icon-512.png",
               description:
                 "Teacher-first AI publication: long-form guides, prompts, tool reviews, and classroom ethics.",
             },
