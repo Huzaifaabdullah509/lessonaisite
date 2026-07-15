@@ -111,9 +111,7 @@ export function SiteFooter() {
       <div className="container-page grid gap-10 py-14 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2 font-display text-lg font-bold text-primary">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-              <Sparkles className="h-5 w-5" />
-            </span>
+            <img src="/favicon.png" alt="LeasonAI logo" className="h-9 w-9 rounded-lg" />
             LeasonAI
           </div>
           <p className="mt-3 text-sm text-muted-foreground">
