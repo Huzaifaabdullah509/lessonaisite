@@ -10,34 +10,51 @@ async function assertAdmin(context: { supabase: any; userId: string }) {
   if (!data) throw new Error("Forbidden: admin role required");
 }
 
-const GEMINI_MODEL = "gemini-flash-latest";
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+const MODELS = [
+  "google/gemini-2.5-flash",
+  "google/gemini-2.5-flash-lite",
+  "google/gemini-2.5-pro",
+];
 
-async function callGemini(prompt: string): Promise<string> {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY is not configured");
-  const res = await fetch(GEMINI_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-goog-api-key": key,
-    },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json" },
-    }),
-  });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Gemini request failed [${res.status}]: ${body}`);
+async function callAI(prompt: string): Promise<string> {
+  const key = process.env.LOVABLE_API_KEY;
+  if (!key) throw new Error("LOVABLE_API_KEY is not configured");
+  let lastErr = "";
+  for (const model of MODELS) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Lovable-API-Key": key,
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: "You are a JSON-only responder. Return valid JSON only, no prose." },
+            { role: "user", content: prompt },
+          ],
+          response_format: { type: "json_object" },
+        }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        const text = json?.choices?.[0]?.message?.content;
+        if (text) return text;
+        lastErr = "empty response";
+        continue;
+      }
+      lastErr = `[${res.status}] ${await res.text()}`;
+      if (res.status === 429 || res.status >= 500) {
+        await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+        continue;
+      }
+      break; // non-retryable, try next model
+    }
   }
-  const json = await res.json();
-  const text: string | undefined = json?.candidates?.[0]?.content?.parts
-    ?.map((p: any) => p?.text ?? "")
-    .join("");
-  if (!text) throw new Error("Gemini returned no text");
-  return text;
+  throw new Error(`AI request failed after retries: ${lastErr}`);
 }
+
 
 function parseJson<T>(raw: string, schema: z.ZodType<T>): T {
   const cleaned = raw
