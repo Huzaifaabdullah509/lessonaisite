@@ -5,7 +5,7 @@ import { listArticlesAdmin, deleteArticle } from "@/lib/admin.functions";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/dashboard/articles")({
+export const Route = createFileRoute("/_authenticated/dashboard/articles/")({
   component: ArticlesList,
 });
 
