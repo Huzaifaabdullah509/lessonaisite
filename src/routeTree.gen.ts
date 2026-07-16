@@ -25,9 +25,12 @@ import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardUsersRouteImport } from './routes/_authenticated/dashboard.users'
 import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
 import { Route as AuthenticatedDashboardAiDraftRouteImport } from './routes/_authenticated/dashboard.ai-draft'
+import { Route as AuthenticatedDashboardUsersIndexRouteImport } from './routes/_authenticated/dashboard.users.index'
 import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
+import { Route as AuthenticatedDashboardUsersIdRouteImport } from './routes/_authenticated/dashboard.users.$id'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
 import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
 
@@ -111,6 +114,12 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardUsersRoute =
+  AuthenticatedDashboardUsersRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardArticlesRoute =
   AuthenticatedDashboardArticlesRouteImport.update({
     id: '/articles',
@@ -123,11 +132,23 @@ const AuthenticatedDashboardAiDraftRoute =
     path: '/ai-draft',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardUsersIndexRoute =
+  AuthenticatedDashboardUsersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardUsersRoute,
+  } as any)
 const AuthenticatedDashboardArticlesIndexRoute =
   AuthenticatedDashboardArticlesIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedDashboardArticlesRoute,
+  } as any)
+const AuthenticatedDashboardUsersIdRoute =
+  AuthenticatedDashboardUsersIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedDashboardUsersRoute,
   } as any)
 const AuthenticatedDashboardArticlesNewRoute =
   AuthenticatedDashboardArticlesNewRouteImport.update({
@@ -159,9 +180,12 @@ export interface FileRoutesByFullPath {
   '/guides/': typeof GuidesIndexRoute
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/dashboard/users/$id': typeof AuthenticatedDashboardUsersIdRoute
   '/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
+  '/dashboard/users/': typeof AuthenticatedDashboardUsersIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 export interface FileRoutesByTo {
@@ -181,7 +205,9 @@ export interface FileRoutesByTo {
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/dashboard/users/$id': typeof AuthenticatedDashboardUsersIdRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesIndexRoute
+  '/dashboard/users': typeof AuthenticatedDashboardUsersIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 export interface FileRoutesById {
@@ -203,9 +229,12 @@ export interface FileRoutesById {
   '/guides/': typeof GuidesIndexRoute
   '/_authenticated/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/_authenticated/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/_authenticated/dashboard/users/$id': typeof AuthenticatedDashboardUsersIdRoute
   '/_authenticated/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
+  '/_authenticated/dashboard/users/': typeof AuthenticatedDashboardUsersIndexRoute
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 export interface FileRouteTypes {
@@ -227,9 +256,12 @@ export interface FileRouteTypes {
     | '/guides/'
     | '/dashboard/ai-draft'
     | '/dashboard/articles'
+    | '/dashboard/users'
     | '/dashboard/'
     | '/dashboard/articles/new'
+    | '/dashboard/users/$id'
     | '/dashboard/articles/'
+    | '/dashboard/users/'
     | '/dashboard/articles/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -249,7 +281,9 @@ export interface FileRouteTypes {
     | '/dashboard/ai-draft'
     | '/dashboard'
     | '/dashboard/articles/new'
+    | '/dashboard/users/$id'
     | '/dashboard/articles'
+    | '/dashboard/users'
     | '/dashboard/articles/$id/edit'
   id:
     | '__root__'
@@ -270,9 +304,12 @@ export interface FileRouteTypes {
     | '/guides/'
     | '/_authenticated/dashboard/ai-draft'
     | '/_authenticated/dashboard/articles'
+    | '/_authenticated/dashboard/users'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/articles/new'
+    | '/_authenticated/dashboard/users/$id'
     | '/_authenticated/dashboard/articles/'
+    | '/_authenticated/dashboard/users/'
     | '/_authenticated/dashboard/articles/$id/edit'
   fileRoutesById: FileRoutesById
 }
@@ -407,6 +444,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/users': {
+      id: '/_authenticated/dashboard/users'
+      path: '/users'
+      fullPath: '/dashboard/users'
+      preLoaderRoute: typeof AuthenticatedDashboardUsersRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/articles': {
       id: '/_authenticated/dashboard/articles'
       path: '/articles'
@@ -421,12 +465,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAiDraftRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/users/': {
+      id: '/_authenticated/dashboard/users/'
+      path: '/'
+      fullPath: '/dashboard/users/'
+      preLoaderRoute: typeof AuthenticatedDashboardUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardUsersRoute
+    }
     '/_authenticated/dashboard/articles/': {
       id: '/_authenticated/dashboard/articles/'
       path: '/'
       fullPath: '/dashboard/articles/'
       preLoaderRoute: typeof AuthenticatedDashboardArticlesIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardArticlesRoute
+    }
+    '/_authenticated/dashboard/users/$id': {
+      id: '/_authenticated/dashboard/users/$id'
+      path: '/$id'
+      fullPath: '/dashboard/users/$id'
+      preLoaderRoute: typeof AuthenticatedDashboardUsersIdRouteImport
+      parentRoute: typeof AuthenticatedDashboardUsersRoute
     }
     '/_authenticated/dashboard/articles/new': {
       id: '/_authenticated/dashboard/articles/new'
@@ -466,9 +524,27 @@ const AuthenticatedDashboardArticlesRouteWithChildren =
     AuthenticatedDashboardArticlesRouteChildren,
   )
 
+interface AuthenticatedDashboardUsersRouteChildren {
+  AuthenticatedDashboardUsersIdRoute: typeof AuthenticatedDashboardUsersIdRoute
+  AuthenticatedDashboardUsersIndexRoute: typeof AuthenticatedDashboardUsersIndexRoute
+}
+
+const AuthenticatedDashboardUsersRouteChildren: AuthenticatedDashboardUsersRouteChildren =
+  {
+    AuthenticatedDashboardUsersIdRoute: AuthenticatedDashboardUsersIdRoute,
+    AuthenticatedDashboardUsersIndexRoute:
+      AuthenticatedDashboardUsersIndexRoute,
+  }
+
+const AuthenticatedDashboardUsersRouteWithChildren =
+  AuthenticatedDashboardUsersRoute._addFileChildren(
+    AuthenticatedDashboardUsersRouteChildren,
+  )
+
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAiDraftRoute: typeof AuthenticatedDashboardAiDraftRoute
   AuthenticatedDashboardArticlesRoute: typeof AuthenticatedDashboardArticlesRouteWithChildren
+  AuthenticatedDashboardUsersRoute: typeof AuthenticatedDashboardUsersRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
@@ -477,6 +553,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardAiDraftRoute: AuthenticatedDashboardAiDraftRoute,
     AuthenticatedDashboardArticlesRoute:
       AuthenticatedDashboardArticlesRouteWithChildren,
+    AuthenticatedDashboardUsersRoute:
+      AuthenticatedDashboardUsersRouteWithChildren,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 
