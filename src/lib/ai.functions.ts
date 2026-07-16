@@ -119,7 +119,7 @@ Return ONLY valid JSON matching this shape:
   "reading_time_minutes": number,
   "body_md": string
 }`;
-    const raw = await callGemini(prompt);
+    const raw = await callAI(prompt);
     try {
       return parseJson(raw, DraftShape);
     } catch {
@@ -156,6 +156,6 @@ Rules:
 
 Return ONLY valid JSON:
 { "seo_title": string, "seo_description": string, "excerpt": string, "tags": string[] }`;
-    const raw = await callGemini(prompt);
+    const raw = await callAI(prompt);
     return parseJson(raw, SeoShape);
   });
