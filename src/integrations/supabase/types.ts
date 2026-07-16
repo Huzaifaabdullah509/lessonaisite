@@ -194,6 +194,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_bans: {
+        Row: {
+          active: boolean
+          banned_by: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          reason: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          banned_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          banned_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -227,9 +260,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_banned: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "editor" | "user"
+      app_role: "admin" | "editor" | "user" | "moderator"
       article_status: "draft" | "published"
     }
     CompositeTypes: {
@@ -358,7 +392,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "editor", "user"],
+      app_role: ["admin", "editor", "user", "moderator"],
       article_status: ["draft", "published"],
     },
   },

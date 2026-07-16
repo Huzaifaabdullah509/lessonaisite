@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-rout
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LayoutDashboard, FileText, Sparkles, LogOut, ExternalLink } from "lucide-react";
+import { LayoutDashboard, FileText, Sparkles, LogOut, ExternalLink, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -41,6 +41,7 @@ function DashboardLayout() {
           <NavItem to="/dashboard" icon={<LayoutDashboard className="h-4 w-4" />} label="Overview" />
           <NavItem to="/dashboard/articles" icon={<FileText className="h-4 w-4" />} label="Articles" />
           <NavItem to="/dashboard/ai-draft" icon={<Sparkles className="h-4 w-4" />} label="AI draft" />
+          <NavItem to="/dashboard/users" icon={<Users className="h-4 w-4" />} label="Users" />
         </nav>
 
         <div className="absolute inset-x-4 bottom-4 space-y-2">

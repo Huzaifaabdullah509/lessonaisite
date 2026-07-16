@@ -5,6 +5,25 @@ import { lovable } from "@/integrations/lovable/index";
 import { SiteHeader, SiteFooter } from "@/components/site-shell";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
+import { checkMyBan } from "@/lib/users.functions";
+
+async function enforceBanOrRedirect(navigate: ReturnType<typeof useNavigate>) {
+  try {
+    const res = await checkMyBan();
+    if (res.banned) {
+      const until = res.expires_at
+        ? ` until ${new Date(res.expires_at).toLocaleString()}`
+        : " permanently";
+      await supabase.auth.signOut();
+      toast.error(`Your account is banned${until}.${res.reason ? " Reason: " + res.reason : ""}`);
+      return false;
+    }
+  } catch {
+    /* ignore ban check errors */
+  }
+  navigate({ to: "/dashboard" });
+  return true;
+}
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -49,8 +68,8 @@ function AuthPage() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success("Welcome back.");
-        navigate({ to: "/dashboard" });
+        const ok = await enforceBanOrRedirect(navigate);
+        if (ok) toast.success("Welcome back.");
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Auth failed");
