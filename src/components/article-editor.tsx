@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { upsertArticle } from "@/lib/admin.functions";
@@ -6,7 +6,7 @@ import { generateSeo } from "@/lib/ai.functions";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Save, Sparkles, Eye, PenLine } from "lucide-react";
+import { Save, Sparkles, Eye, PenLine, CheckCircle2, Loader2 } from "lucide-react";
 
 export type ArticleDraft = {
   id?: string;
@@ -52,6 +52,8 @@ export function ArticleEditor({ initial }: { initial: ArticleDraft }) {
   const [tab, setTab] = useState<"write" | "preview">("write");
   const [saving, setSaving] = useState(false);
   const [seoLoading, setSeoLoading] = useState(false);
+  const [autoState, setAutoState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const navigate = useNavigate();
   const upsert = useServerFn(upsertArticle);
   const seoFn = useServerFn(generateSeo);
@@ -60,6 +62,46 @@ export function ArticleEditor({ initial }: { initial: ArticleDraft }) {
 
   const update = <K extends keyof ArticleDraft>(k: K, v: ArticleDraft[K]) =>
     setDraft((d) => ({ ...d, [k]: v }));
+
+  // Autosave: only for existing (edit) drafts; debounce 2s
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSerializedRef = useRef<string>(JSON.stringify(initial));
+  useEffect(() => {
+    if (!draft.id) return;
+    const serialized = JSON.stringify(draft);
+    if (serialized === lastSerializedRef.current) return;
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(async () => {
+      setAutoState("saving");
+      try {
+        await upsert({
+          data: {
+            id: draft.id,
+            slug: draft.slug || slugify(draft.title),
+            title: draft.title,
+            excerpt: draft.excerpt || null,
+            body_md: draft.body_md,
+            cover_url: draft.cover_url || null,
+            category: draft.category,
+            tags: draft.tags.split(",").map((t) => t.trim()).filter(Boolean),
+            reading_time_minutes: draft.reading_time_minutes || null,
+            seo_title: draft.seo_title || null,
+            seo_description: draft.seo_description || null,
+            status: draft.status,
+          },
+        });
+        lastSerializedRef.current = serialized;
+        setAutoState("saved");
+        setLastSavedAt(new Date());
+      } catch {
+        setAutoState("error");
+      }
+    }, 2000);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [draft, upsert]);
+
 
   async function save(publish?: boolean) {
     setSaving(true);
@@ -123,6 +165,7 @@ export function ArticleEditor({ initial }: { initial: ArticleDraft }) {
           <p className="text-sm text-muted-foreground">Markdown editor with live preview</p>
         </div>
         <div className="flex items-center gap-2">
+          {draft.id && <AutosaveBadge state={autoState} lastSavedAt={lastSavedAt} />}
           <button
             onClick={fillSeo}
             disabled={seoLoading}
@@ -300,5 +343,31 @@ function TabBtn({
     >
       {children}
     </button>
+  );
+}
+
+function AutosaveBadge({
+  state,
+  lastSavedAt,
+}: {
+  state: "idle" | "saving" | "saved" | "error";
+  lastSavedAt: Date | null;
+}) {
+  if (state === "idle" && !lastSavedAt) return null;
+  const [text, icon, cls] =
+    state === "saving"
+      ? ["Saving…", <Loader2 key="l" className="h-3.5 w-3.5 animate-spin" />, "text-muted-foreground"]
+      : state === "error"
+        ? ["Autosave failed", null, "text-destructive"]
+        : [
+            lastSavedAt ? `Saved ${lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Saved",
+            <CheckCircle2 key="c" className="h-3.5 w-3.5" />,
+            "text-accent",
+          ];
+  return (
+    <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${cls}`}>
+      {icon}
+      {text}
+    </span>
   );
 }
