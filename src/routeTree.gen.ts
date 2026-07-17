@@ -27,6 +27,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardUsersRouteImport } from './routes/_authenticated/dashboard.users'
 import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
+import { Route as AuthenticatedDashboardAiToolsRouteImport } from './routes/_authenticated/dashboard.ai-tools'
 import { Route as AuthenticatedDashboardAiDraftRouteImport } from './routes/_authenticated/dashboard.ai-draft'
 import { Route as AuthenticatedDashboardUsersIndexRouteImport } from './routes/_authenticated/dashboard.users.index'
 import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
@@ -126,6 +127,12 @@ const AuthenticatedDashboardArticlesRoute =
     path: '/articles',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAiToolsRoute =
+  AuthenticatedDashboardAiToolsRouteImport.update({
+    id: '/ai-tools',
+    path: '/ai-tools',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAiDraftRoute =
   AuthenticatedDashboardAiDraftRouteImport.update({
     id: '/ai-draft',
@@ -179,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
+  '/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -203,6 +211,7 @@ export interface FileRoutesByTo {
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides': typeof GuidesIndexRoute
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
+  '/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/users/$id': typeof AuthenticatedDashboardUsersIdRoute
@@ -228,6 +237,7 @@ export interface FileRoutesById {
   '/guides/$slug': typeof GuidesSlugRoute
   '/guides/': typeof GuidesIndexRoute
   '/_authenticated/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
+  '/_authenticated/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/_authenticated/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -255,6 +265,7 @@ export interface FileRouteTypes {
     | '/guides/$slug'
     | '/guides/'
     | '/dashboard/ai-draft'
+    | '/dashboard/ai-tools'
     | '/dashboard/articles'
     | '/dashboard/users'
     | '/dashboard/'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
     | '/guides/$slug'
     | '/guides'
     | '/dashboard/ai-draft'
+    | '/dashboard/ai-tools'
     | '/dashboard'
     | '/dashboard/articles/new'
     | '/dashboard/users/$id'
@@ -303,6 +315,7 @@ export interface FileRouteTypes {
     | '/guides/$slug'
     | '/guides/'
     | '/_authenticated/dashboard/ai-draft'
+    | '/_authenticated/dashboard/ai-tools'
     | '/_authenticated/dashboard/articles'
     | '/_authenticated/dashboard/users'
     | '/_authenticated/dashboard/'
@@ -458,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardArticlesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/ai-tools': {
+      id: '/_authenticated/dashboard/ai-tools'
+      path: '/ai-tools'
+      fullPath: '/dashboard/ai-tools'
+      preLoaderRoute: typeof AuthenticatedDashboardAiToolsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/ai-draft': {
       id: '/_authenticated/dashboard/ai-draft'
       path: '/ai-draft'
@@ -543,6 +563,7 @@ const AuthenticatedDashboardUsersRouteWithChildren =
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAiDraftRoute: typeof AuthenticatedDashboardAiDraftRoute
+  AuthenticatedDashboardAiToolsRoute: typeof AuthenticatedDashboardAiToolsRoute
   AuthenticatedDashboardArticlesRoute: typeof AuthenticatedDashboardArticlesRouteWithChildren
   AuthenticatedDashboardUsersRoute: typeof AuthenticatedDashboardUsersRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -551,6 +572,7 @@ interface AuthenticatedDashboardRouteChildren {
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAiDraftRoute: AuthenticatedDashboardAiDraftRoute,
+    AuthenticatedDashboardAiToolsRoute: AuthenticatedDashboardAiToolsRoute,
     AuthenticatedDashboardArticlesRoute:
       AuthenticatedDashboardArticlesRouteWithChildren,
     AuthenticatedDashboardUsersRoute:
@@ -593,13 +615,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
