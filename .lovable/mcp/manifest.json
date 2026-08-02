@@ -1,0 +1,198 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://fqedxqjfbizbxybarrfs.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "leasonai-assistant",
+      "version": "0.1.0",
+      "title": "LeasonAI Assistant"
+    },
+    "tools": [
+      {
+        "name": "search_guides",
+        "title": "Search guides",
+        "description": "Search LeasonAI guides and articles by keyword, with optional category and status filters. Returns slugs, titles and excerpts.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Keyword to match in title, excerpt or tags. Empty for latest."
+            },
+            "category": {
+              "type": "string",
+              "description": "Category slug, e.g. guides, prompts, ethics."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "published",
+                "draft",
+                "any"
+              ],
+              "description": "Publication status filter."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Max results (1-50, default 10)."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_guide",
+        "title": "Get guide",
+        "description": "Fetch one LeasonAI guide by slug, including the full Markdown body and SEO metadata.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Article slug, e.g. ai-for-teachers-2026."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_prompts",
+        "title": "List teacher prompts",
+        "description": "Browse the LeasonAI prompt library, optionally filtered by category or keyword.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Keyword to match in title, use case or prompt text."
+            },
+            "category": {
+              "type": "string",
+              "description": "Prompt category, e.g. planning, feedback, assessment."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Max results (1-50, default 15)."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_tools_directory",
+        "title": "List AI tools directory",
+        "description": "Browse the LeasonAI directory of AI tools for teachers, with pricing and ratings.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Tool category filter."
+            },
+            "featuredOnly": {
+              "type": "boolean",
+              "description": "Only return featured tools."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Max results (1-50, default 20)."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_guide_draft",
+        "title": "Create guide draft",
+        "description": "Create a new draft article in LeasonAI. Requires an admin account. The draft is never published automatically.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 3,
+              "description": "Article title."
+            },
+            "slug": {
+              "type": "string",
+              "minLength": 3,
+              "description": "Lowercase-with-dashes URL slug."
+            },
+            "body_md": {
+              "type": "string",
+              "description": "Article body in Markdown."
+            },
+            "excerpt": {
+              "type": "string",
+              "description": "Short summary shown in listings."
+            },
+            "category": {
+              "type": "string",
+              "description": "Category, e.g. guides, prompts, ethics (default guides)."
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Short lowercase tags."
+            }
+          },
+          "required": [
+            "title",
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

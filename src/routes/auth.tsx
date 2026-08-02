@@ -7,7 +7,16 @@ import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import { checkMyBan } from "@/lib/users.functions";
 
-async function enforceBanOrRedirect(navigate: ReturnType<typeof useNavigate>) {
+function safeNext(next: string | undefined): string | null {
+  if (!next) return null;
+  if (!next.startsWith("/") || next.startsWith("//")) return null;
+  return next;
+}
+
+async function enforceBanOrRedirect(
+  navigate: ReturnType<typeof useNavigate>,
+  next: string | null,
+) {
   try {
     const res = await checkMyBan();
     if (res.banned) {
@@ -21,11 +30,15 @@ async function enforceBanOrRedirect(navigate: ReturnType<typeof useNavigate>) {
   } catch {
     /* ignore ban check errors */
   }
-  navigate({ to: "/dashboard" });
+  if (next) window.location.href = next;
+  else navigate({ to: "/dashboard" });
   return true;
 }
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" ? s.next : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — LeasonAI" },
@@ -38,6 +51,8 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
+  const next = safeNext(search.next);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,9 +61,12 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard" });
+      if (!data.session) return;
+      if (next) window.location.href = next;
+      else navigate({ to: "/dashboard" });
     });
-  }, [navigate]);
+  }, [navigate, next]);
+
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
@@ -59,7 +77,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}${next ?? "/dashboard"}`,
             data: { full_name: displayName || email.split("@")[0] },
           },
         });
@@ -68,7 +86,7 @@ function AuthPage() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        const ok = await enforceBanOrRedirect(navigate);
+        const ok = await enforceBanOrRedirect(navigate, next);
         if (ok) toast.success("Welcome back.");
       }
     } catch (err) {
@@ -82,11 +100,13 @@ function AuthPage() {
     setLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: `${window.location.origin}${next ?? ""}`,
       });
       if (result.error) throw result.error;
       if (result.redirected) return;
-      navigate({ to: "/dashboard" });
+      if (next) window.location.href = next;
+      else navigate({ to: "/dashboard" });
+
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Google sign-in failed");
     } finally {
