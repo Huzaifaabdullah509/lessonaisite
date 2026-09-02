@@ -14,7 +14,7 @@ export type McpLogRow = {
   status: string;
   duration_ms: number | null;
   error_message: string | null;
-  input: Record<string, unknown> | null;
+  input: Record<string, string | number | boolean | null> | null;
 };
 
 const LogFilters = z.object({
