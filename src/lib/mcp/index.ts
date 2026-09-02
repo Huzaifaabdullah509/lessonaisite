@@ -1,9 +1,5 @@
 import { auth, defineMcp } from "@lovable.dev/mcp-js";
-import searchGuides from "./tools/search-guides";
-import getGuide from "./tools/get-guide";
-import listPrompts from "./tools/list-prompts";
-import listToolsDirectory from "./tools/list-tools-directory";
-import createGuideDraft from "./tools/create-guide-draft";
+import { auditedTools } from "./registry";
 
 const projectRef = import.meta.env["VITE_SUPABASE_PROJECT_ID"] ?? "project-ref-unset";
 
@@ -17,5 +13,5 @@ export default defineMcp({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",
   }),
-  tools: [searchGuides, getGuide, listPrompts, listToolsDirectory, createGuideDraft],
+  tools: auditedTools,
 });
