@@ -29,6 +29,7 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardUsersRouteImport } from './routes/_authenticated/dashboard.users'
+import { Route as AuthenticatedDashboardMcpLogsRouteImport } from './routes/_authenticated/dashboard.mcp-logs'
 import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
 import { Route as AuthenticatedDashboardAiToolsRouteImport } from './routes/_authenticated/dashboard.ai-tools'
 import { Route as AuthenticatedDashboardAiDraftRouteImport } from './routes/_authenticated/dashboard.ai-draft'
@@ -143,6 +144,12 @@ const AuthenticatedDashboardUsersRoute =
     path: '/users',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardMcpLogsRoute =
+  AuthenticatedDashboardMcpLogsRouteImport.update({
+    id: '/mcp-logs',
+    path: '/mcp-logs',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardArticlesRoute =
   AuthenticatedDashboardArticlesRouteImport.update({
     id: '/articles',
@@ -226,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/dashboard/mcp-logs': typeof AuthenticatedDashboardMcpLogsRoute
   '/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -255,6 +263,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
+  '/dashboard/mcp-logs': typeof AuthenticatedDashboardMcpLogsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/users/$id': typeof AuthenticatedDashboardUsersIdRoute
@@ -287,6 +296,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/_authenticated/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/_authenticated/dashboard/mcp-logs': typeof AuthenticatedDashboardMcpLogsRoute
   '/_authenticated/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/dashboard/ai-draft'
     | '/dashboard/ai-tools'
     | '/dashboard/articles'
+    | '/dashboard/mcp-logs'
     | '/dashboard/users'
     | '/dashboard/'
     | '/dashboard/articles/new'
@@ -349,6 +360,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/ai-draft'
     | '/dashboard/ai-tools'
+    | '/dashboard/mcp-logs'
     | '/dashboard'
     | '/dashboard/articles/new'
     | '/dashboard/users/$id'
@@ -380,6 +392,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/ai-draft'
     | '/_authenticated/dashboard/ai-tools'
     | '/_authenticated/dashboard/articles'
+    | '/_authenticated/dashboard/mcp-logs'
     | '/_authenticated/dashboard/users'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/articles/new'
@@ -553,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardUsersRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/mcp-logs': {
+      id: '/_authenticated/dashboard/mcp-logs'
+      path: '/mcp-logs'
+      fullPath: '/dashboard/mcp-logs'
+      preLoaderRoute: typeof AuthenticatedDashboardMcpLogsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/articles': {
       id: '/_authenticated/dashboard/articles'
       path: '/articles'
@@ -668,6 +688,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAiDraftRoute: typeof AuthenticatedDashboardAiDraftRoute
   AuthenticatedDashboardAiToolsRoute: typeof AuthenticatedDashboardAiToolsRoute
   AuthenticatedDashboardArticlesRoute: typeof AuthenticatedDashboardArticlesRouteWithChildren
+  AuthenticatedDashboardMcpLogsRoute: typeof AuthenticatedDashboardMcpLogsRoute
   AuthenticatedDashboardUsersRoute: typeof AuthenticatedDashboardUsersRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
@@ -678,6 +699,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardAiToolsRoute: AuthenticatedDashboardAiToolsRoute,
     AuthenticatedDashboardArticlesRoute:
       AuthenticatedDashboardArticlesRouteWithChildren,
+    AuthenticatedDashboardMcpLogsRoute: AuthenticatedDashboardMcpLogsRoute,
     AuthenticatedDashboardUsersRoute:
       AuthenticatedDashboardUsersRouteWithChildren,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
