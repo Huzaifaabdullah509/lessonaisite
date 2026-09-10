@@ -2,7 +2,18 @@ import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-rout
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LayoutDashboard, FileText, Sparkles, LogOut, ExternalLink, Users, Wand2 } from "lucide-react";
+import {
+  LayoutDashboard,
+  FileText,
+  Sparkles,
+  LogOut,
+  ExternalLink,
+  Users,
+  Wand2,
+  Plug,
+  TerminalSquare,
+  ScrollText,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -43,6 +54,25 @@ function DashboardLayout() {
           <NavItem to="/dashboard/ai-draft" icon={<Sparkles className="h-4 w-4" />} label="AI draft" />
           <NavItem to="/dashboard/ai-tools" icon={<Wand2 className="h-4 w-4" />} label="AI tools" />
           <NavItem to="/dashboard/users" icon={<Users className="h-4 w-4" />} label="Users" />
+
+          <p className="px-3 pb-1 pt-5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Agents
+          </p>
+          <NavItem
+            to="/dashboard/mcp-connections"
+            icon={<Plug className="h-4 w-4" />}
+            label="Connections"
+          />
+          <NavItem
+            to="/dashboard/mcp-playground"
+            icon={<TerminalSquare className="h-4 w-4" />}
+            label="Playground"
+          />
+          <NavItem
+            to="/dashboard/mcp-logs"
+            icon={<ScrollText className="h-4 w-4" />}
+            label="Audit logs"
+          />
         </nav>
 
         <div className="absolute inset-x-4 bottom-4 space-y-2">

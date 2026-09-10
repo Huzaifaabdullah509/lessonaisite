@@ -19,6 +19,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as EditorialStandardsRouteImport } from './routes/editorial-standards'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AgentToolsRouteImport } from './routes/agent-tools'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -29,7 +30,9 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardUsersRouteImport } from './routes/_authenticated/dashboard.users'
+import { Route as AuthenticatedDashboardMcpPlaygroundRouteImport } from './routes/_authenticated/dashboard.mcp-playground'
 import { Route as AuthenticatedDashboardMcpLogsRouteImport } from './routes/_authenticated/dashboard.mcp-logs'
+import { Route as AuthenticatedDashboardMcpConnectionsRouteImport } from './routes/_authenticated/dashboard.mcp-connections'
 import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
 import { Route as AuthenticatedDashboardAiToolsRouteImport } from './routes/_authenticated/dashboard.ai-tools'
 import { Route as AuthenticatedDashboardAiDraftRouteImport } from './routes/_authenticated/dashboard.ai-draft'
@@ -91,6 +94,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AgentToolsRoute = AgentToolsRouteImport.update({
+  id: '/agent-tools',
+  path: '/agent-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -144,10 +152,22 @@ const AuthenticatedDashboardUsersRoute =
     path: '/users',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardMcpPlaygroundRoute =
+  AuthenticatedDashboardMcpPlaygroundRouteImport.update({
+    id: '/mcp-playground',
+    path: '/mcp-playground',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardMcpLogsRoute =
   AuthenticatedDashboardMcpLogsRouteImport.update({
     id: '/mcp-logs',
     path: '/mcp-logs',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardMcpConnectionsRoute =
+  AuthenticatedDashboardMcpConnectionsRouteImport.update({
+    id: '/mcp-connections',
+    path: '/mcp-connections',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardArticlesRoute =
@@ -213,6 +233,7 @@ const AuthenticatedDashboardArticlesIdEditRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/agent-tools': typeof AgentToolsRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/editorial-standards': typeof EditorialStandardsRoute
@@ -233,7 +254,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/dashboard/mcp-connections': typeof AuthenticatedDashboardMcpConnectionsRoute
   '/dashboard/mcp-logs': typeof AuthenticatedDashboardMcpLogsRoute
+  '/dashboard/mcp-playground': typeof AuthenticatedDashboardMcpPlaygroundRoute
   '/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -245,6 +268,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/agent-tools': typeof AgentToolsRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/editorial-standards': typeof EditorialStandardsRoute
@@ -263,7 +287,9 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
+  '/dashboard/mcp-connections': typeof AuthenticatedDashboardMcpConnectionsRoute
   '/dashboard/mcp-logs': typeof AuthenticatedDashboardMcpLogsRoute
+  '/dashboard/mcp-playground': typeof AuthenticatedDashboardMcpPlaygroundRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/users/$id': typeof AuthenticatedDashboardUsersIdRoute
@@ -276,6 +302,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/agent-tools': typeof AgentToolsRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/editorial-standards': typeof EditorialStandardsRoute
@@ -296,7 +323,9 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/ai-draft': typeof AuthenticatedDashboardAiDraftRoute
   '/_authenticated/dashboard/ai-tools': typeof AuthenticatedDashboardAiToolsRoute
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/_authenticated/dashboard/mcp-connections': typeof AuthenticatedDashboardMcpConnectionsRoute
   '/_authenticated/dashboard/mcp-logs': typeof AuthenticatedDashboardMcpLogsRoute
+  '/_authenticated/dashboard/mcp-playground': typeof AuthenticatedDashboardMcpPlaygroundRoute
   '/_authenticated/dashboard/users': typeof AuthenticatedDashboardUsersRouteWithChildren
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -310,6 +339,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/agent-tools'
     | '/auth'
     | '/contact'
     | '/editorial-standards'
@@ -330,7 +360,9 @@ export interface FileRouteTypes {
     | '/dashboard/ai-draft'
     | '/dashboard/ai-tools'
     | '/dashboard/articles'
+    | '/dashboard/mcp-connections'
     | '/dashboard/mcp-logs'
+    | '/dashboard/mcp-playground'
     | '/dashboard/users'
     | '/dashboard/'
     | '/dashboard/articles/new'
@@ -342,6 +374,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/agent-tools'
     | '/auth'
     | '/contact'
     | '/editorial-standards'
@@ -360,7 +393,9 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/ai-draft'
     | '/dashboard/ai-tools'
+    | '/dashboard/mcp-connections'
     | '/dashboard/mcp-logs'
+    | '/dashboard/mcp-playground'
     | '/dashboard'
     | '/dashboard/articles/new'
     | '/dashboard/users/$id'
@@ -372,6 +407,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/about'
+    | '/agent-tools'
     | '/auth'
     | '/contact'
     | '/editorial-standards'
@@ -392,7 +428,9 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/ai-draft'
     | '/_authenticated/dashboard/ai-tools'
     | '/_authenticated/dashboard/articles'
+    | '/_authenticated/dashboard/mcp-connections'
     | '/_authenticated/dashboard/mcp-logs'
+    | '/_authenticated/dashboard/mcp-playground'
     | '/_authenticated/dashboard/users'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/articles/new'
@@ -406,6 +444,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AgentToolsRoute: typeof AgentToolsRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   EditorialStandardsRoute: typeof EditorialStandardsRoute
@@ -496,6 +535,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/agent-tools': {
+      id: '/agent-tools'
+      path: '/agent-tools'
+      fullPath: '/agent-tools'
+      preLoaderRoute: typeof AgentToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -566,11 +612,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardUsersRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/mcp-playground': {
+      id: '/_authenticated/dashboard/mcp-playground'
+      path: '/mcp-playground'
+      fullPath: '/dashboard/mcp-playground'
+      preLoaderRoute: typeof AuthenticatedDashboardMcpPlaygroundRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/mcp-logs': {
       id: '/_authenticated/dashboard/mcp-logs'
       path: '/mcp-logs'
       fullPath: '/dashboard/mcp-logs'
       preLoaderRoute: typeof AuthenticatedDashboardMcpLogsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/mcp-connections': {
+      id: '/_authenticated/dashboard/mcp-connections'
+      path: '/mcp-connections'
+      fullPath: '/dashboard/mcp-connections'
+      preLoaderRoute: typeof AuthenticatedDashboardMcpConnectionsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/articles': {
@@ -688,7 +748,9 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAiDraftRoute: typeof AuthenticatedDashboardAiDraftRoute
   AuthenticatedDashboardAiToolsRoute: typeof AuthenticatedDashboardAiToolsRoute
   AuthenticatedDashboardArticlesRoute: typeof AuthenticatedDashboardArticlesRouteWithChildren
+  AuthenticatedDashboardMcpConnectionsRoute: typeof AuthenticatedDashboardMcpConnectionsRoute
   AuthenticatedDashboardMcpLogsRoute: typeof AuthenticatedDashboardMcpLogsRoute
+  AuthenticatedDashboardMcpPlaygroundRoute: typeof AuthenticatedDashboardMcpPlaygroundRoute
   AuthenticatedDashboardUsersRoute: typeof AuthenticatedDashboardUsersRouteWithChildren
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
@@ -699,7 +761,11 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardAiToolsRoute: AuthenticatedDashboardAiToolsRoute,
     AuthenticatedDashboardArticlesRoute:
       AuthenticatedDashboardArticlesRouteWithChildren,
+    AuthenticatedDashboardMcpConnectionsRoute:
+      AuthenticatedDashboardMcpConnectionsRoute,
     AuthenticatedDashboardMcpLogsRoute: AuthenticatedDashboardMcpLogsRoute,
+    AuthenticatedDashboardMcpPlaygroundRoute:
+      AuthenticatedDashboardMcpPlaygroundRoute,
     AuthenticatedDashboardUsersRoute:
       AuthenticatedDashboardUsersRouteWithChildren,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
@@ -725,6 +791,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AgentToolsRoute: AgentToolsRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   EditorialStandardsRoute: EditorialStandardsRoute,
