@@ -21,7 +21,7 @@ type RunResult = {
 
 function PlaygroundPage() {
   const run = useServerFn(runMcpTool);
-  const [tool, setTool] = useState(toolCatalog[0].name);
+  const [tool, setTool] = useState<string>(toolCatalog[0].name);
   const [input, setInput] = useState(JSON.stringify(toolCatalog[0].example, null, 2));
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<RunResult | null>(null);

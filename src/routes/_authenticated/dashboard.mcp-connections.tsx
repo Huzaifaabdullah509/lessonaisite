@@ -17,7 +17,7 @@ function McpConnectionsPage() {
   const fetchConnections = useServerFn(listMcpConnections);
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["mcp-connections"],
-    queryFn: () => fetchConnections({ data: {} }),
+    queryFn: () => fetchConnections(),
   });
 
   const serverUrl =
