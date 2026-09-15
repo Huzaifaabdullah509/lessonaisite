@@ -129,16 +129,17 @@ export function SiteFooter() {
         <FooterCol
           title="LeasonAI"
           links={[
-            { to: "/about", label: "About" },
-            { to: "/contact", label: "Contact" },
+            { to: "/about", label: "About us" },
+            { to: "/contact", label: "Contact us" },
             { to: "/editorial-standards", label: "Editorial standards" },
+            { to: "/agent-tools", label: "Agent tools (MCP)" },
           ]}
         />
         <FooterCol
           title="Legal"
           links={[
-            { to: "/privacy", label: "Privacy" },
-            { to: "/terms", label: "Terms" },
+            { to: "/privacy", label: "Privacy Policy" },
+            { to: "/terms", label: "Terms of Service" },
           ]}
         />
       </div>
