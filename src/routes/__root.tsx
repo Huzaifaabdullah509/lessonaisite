@@ -93,6 +93,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: "https://lessonaisite.lovable.app/icon-512.png" },
       { name: "twitter:image", content: "https://lessonaisite.lovable.app/icon-512.png" },
       { name: "google-adsense-account", content: "ca-pub-4127109483281417" },
+      {
+        name: "google-site-verification",
+        content: "q9-V6Vrhffkw18sR1dSBmaAe_4qstxgWjUuEKN2g738",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
